@@ -1,0 +1,107 @@
+debug: false
+use_random_seed: true
+seed: 461
+
+fold: ???
+train_folds: ???
+valid_folds: ???
+
+use_wandb: false
+all_data: false
+
+tags:
+  - debv3_large
+  - bce
+
+model:
+  backbone_path: microsoft/deberta-v3-large
+  num_layers_reinit: 0
+  num_layers_in_head: 12
+  pv_id: 2 # 0, 1, 2
+  n_freeze: 22
+  max_length: 1024
+  target_names:
+    - cohesion
+    - syntax
+    - vocabulary
+    - phraseology
+    - grammar
+    - conventions
+  loss_fn: bce
+  load_from_ckpt: false
+  ckpt_path: ???
+  len_tokenizer: ???
+  lm_arch: debertaV2 # debertaV1, debertaV2, electra, funnel
+  use_multihead_attention: false
+  use_weighted_average: false
+  use_adapet: false
+
+train_params:
+  train_bs: 8
+  valid_bs: 8
+  grad_accumulation: 1
+  warmup_pct: 0.05
+  num_epochs: 5
+  eval_frequency: 120
+  full_eval_start_epoch: 0
+  use_fp16: false
+  save_trigger: 0.455
+  patience: 20
+  use_ema: true
+  ema_prev_epoch_weight: 0.15
+  use_mixout: false
+  mixout_prob: 0.1
+
+
+optimizer:
+  decoder_lr: 1.4e-5
+  encoder_lr: 1.4e-5
+  weight_decay: 1e-4
+  eps: 1e-6
+  beta1: 0.9
+  beta2: 0.999
+  grad_clip: 10
+  use_bnb: false
+  use_llrd: true
+  llrd: 0.925
+
+awp:
+  use_awp: false
+  awp_trigger: 5.0
+  awp_trigger_epoch: 1
+  adv_lr: 8e-5
+  adv_eps: 0.001
+
+outputs:
+  model_dir: ../models/PET
+
+
+fold_metadata:
+  n_folds: 4
+  fold_dir: ../datasets/fold_split
+  fold_path: "cv_map_${fold_metadata.n_folds}_folds.parquet"
+
+
+competition_dataset:
+  data_dir: ../datasets/feedback-prize-english-language-learning
+  train_path: train.csv
+  test_path: test.csv
+
+
+t5_dataset:
+  use_t5: false
+  train_path: ../datasets/augmented_data/t5_augmented.csv
+  num_augmented: 1500
+
+ensemble_pl:
+  use_pl: true
+  pl_folder: ../datasets/fb3-en-pl
+  pl_labels_folder: ../datasets/fb3-en-pl/ens001
+  num_pl_samples: 10000
+
+wandb:
+  entity: kaggle-clrp
+  project: rb-feedback-ells-dev-a1
+  run_name: rb-exp031-v3l-pet-epl-10k
+
+

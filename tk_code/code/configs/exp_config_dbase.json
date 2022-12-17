@@ -1,0 +1,96 @@
+{
+    "debug": false,
+    "seed": false,
+    "add_new_tokens": false,
+
+    "base_model_path": "microsoft/deberta-v3-base",
+    "num_layers_reinit": 2,
+    "n_freeze": 22,
+    "model_dir": "../output/exp209-deb-b-cls-fc-enpl",
+    "run_name": "exp209-deb-b-cls-fc-enpl",
+
+    "MSD": false,
+    "prompt_tuning": false,
+    "lstm": false,
+    "embedding": "cls",
+    "head": "fc",
+    "dropout": false,
+
+    "add_prompt": true,
+    "add_topic": false,
+    "additional_features": false,
+    "add_prefix": false,
+    
+    "max_length":  512,
+    "loss_fn": "mcrmse",
+    "l1_loss_beta": 1,
+    "aux_loss": false,
+    
+    "train_full": true,
+    "use_aug_data": true,
+    "num_samples": 4000,
+    "aug_train_path": "../datasets/processed/pl/4f_8m/fol0_pl.csv",
+    "aug_train_base": "../datasets/processed/pl/pl_data.csv",
+    "aug_dist_sample": true,
+    "aug_dist_sample_path": "../datasets/processed/pl/4f_8m_samples/pl_ids_0.json",
+    "use_ema": true,
+    "ema_decay_rate": 0.95,
+
+    "use_mixout": false,
+    "mixout_prob": 0.3,
+
+    "train_bs": 16,
+    "grad_accumulation": 1,
+    "gradient_checkpointing": true,
+
+    "use_llrd": true,
+    "weight_decay": 2e-4,
+    "decoder_lr": 4e-5,
+    "encoder_lr": 4e-5,
+    "llrd": 0.95,
+    "eps": 1e-6,
+    "beta1": 0.9,
+    "beta2": 0.999,
+
+    "num_epochs": 4,
+    "eval_frequency": 5,
+    "full_eval_start_epoch": 1,
+
+    "use_awp": true,
+    "awp_trigger": 0.47,
+    "awp_trigger_epoch": 1,
+    "adv_lr": 1e-4,
+    "adv_eps": 0.001,
+
+    "use_mask_aug": false,
+    "use_residual_lstm": false,
+    "focal_gamma": 2.0,
+
+    "project": "feedback-prize-ell-tk",
+    "exp_no": 1,
+    "tags": ["fast", "dexl", "residual lstm"],
+
+    "warmup_pct": 0.05,
+    "patience": 25,
+    "grad_clip": 1000,
+    "use_bnb": false,
+    "use_fp16": false,
+
+    "stride": 256,
+    "num_labels": 6,
+    "valid_bs": 16,
+
+    "swa_lr": 8e-6,
+    "swa_anneal_epochs": 1000,
+    "swa_trigger_epoch": 2000,
+
+    "save_trigger": 0.60,
+
+    "fpe_dataset_dir": "../datasets/feedback-prize-english-language-learning",
+    "fold_path": "../datasets/processed/train_4folds.csv",
+    "train_essay_fpe21_dir": "../datasets/processed/fpe_21_train_essays.parquet",
+    "train_essay_fpe22_dir": "../datasets/processed/fpe_22_train_essays.parquet",
+    "test_essay_fpe22_dir": "../datasets/processed/fpe_22_test_essays.parquet",
+    "code_dir": "/content/feedback/code",
+    "n_folds": 4
+}

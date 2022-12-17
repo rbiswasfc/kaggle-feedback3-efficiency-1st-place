@@ -1,0 +1,108 @@
+debug: false
+use_random_seed: true
+seed: 461
+
+fold: ???
+train_folds: ???
+valid_folds: ???
+
+use_wandb: false
+all_data: true
+
+tags:
+  - debv3_small
+  - baseline
+
+model:
+  backbone_path: microsoft/deberta-v3-xsmall
+  num_layers_reinit: 1 # 0
+  feature_extractor:
+    num_layers: 4
+  n_freeze: 6
+  max_length: 448
+  target_names:
+    - cohesion
+    - syntax
+    - vocabulary
+    - phraseology
+    - grammar
+    - conventions
+  loss_fn: mse
+  load_from_ckpt: false
+  ckpt_path: ???
+  len_tokenizer: ???
+  use_sim_loss: true
+  use_ranking_loss: true
+
+train_params:
+  train_bs: 8
+  valid_bs: 16
+  grad_accumulation: 1
+  warmup_pct: 0.05
+  num_epochs: 6 # 6
+  eval_frequency: 120
+  full_eval_start_epoch: 0
+  save_trigger: 1.0
+  patience: 20
+  use_ema: true
+  ema_prev_epoch_weight: 0.15
+  use_mixout: false
+  mixout_prob: 0.1
+  use_fp16: true
+
+optimizer:
+  decoder_lr: 3.2e-5 # 1.25e-5
+  encoder_lr: 1.6e-5 # 1.25e-5
+  weight_decay: 1e-4
+  eps: 1e-6
+  beta1: 0.9
+  beta2: 0.999
+  grad_clip: 10
+  use_bnb: true
+  use_llrd: true
+  llrd: 0.92
+
+
+awp:
+  use_awp: true
+  awp_trigger: 5.0
+  awp_trigger_epoch: 1
+  adv_lr: 1e-4
+  adv_eps: 0.001
+
+
+outputs:
+  model_dir: ../models/efficiency_xsmall
+
+
+fold_metadata:
+  n_folds: 4
+  fold_dir: ../datasets/fold_split
+  fold_path: "cv_map_${fold_metadata.n_folds}_folds.parquet"
+
+
+competition_dataset:
+  data_dir: ../datasets/feedback-prize-english-language-learning
+  train_path: train.csv
+  test_path: test.csv
+
+
+t5_dataset:
+  use_t5: false
+  train_path: ../datasets/augmented_data/t5_augmented.csv
+  num_augmented: 1000
+
+ensemble_pl:
+  use_pl: true
+  pl_folder: ../datasets/fb3-en-pl-8f
+  pl_essay_path: ../datasets/fb3-en-pl-8f/4f_8m/fold${fold}_pl.csv
+  pl_samples_path: ../datasets/fb3-en-pl-8f/4f_8m_samples/pl_ids_${fold}.json
+  pl_samples_dir: ../datasets/fb3-en-pl-8f/4f_8m_samples
+  pl_essay_dir: ../datasets/fb3-en-pl-8f/4f_8m
+
+wandb:
+  entity: kaggle-clrp
+  project: rb-feedback-ells-dev-a1
+  run_name: rb-exp101-efficiency-384-xsmall
+
+

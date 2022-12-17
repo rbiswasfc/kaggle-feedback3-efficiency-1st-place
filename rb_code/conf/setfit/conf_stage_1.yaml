@@ -1,0 +1,96 @@
+debug: false
+use_random_seed: true
+seed: 461
+
+fold: ???
+train_folds: ???
+valid_folds: ???
+# train_pair_factor: 4
+# valid_pair_factor: 1
+
+use_wandb: false
+all_data: false
+use_mask_aug: false
+
+tags:
+  - setfit
+  - cos_sim
+
+model:
+  backbone_path: microsoft/deberta-v3-large
+  num_layers_reinit: 2
+  num_layers_in_head: 4
+  n_freeze: 22
+  max_length: 768
+  label_mode: cos_sim # cos_sim, contrastive
+  target_names:
+    - cohesion
+    - syntax
+    - vocabulary
+    - phraseology
+    - grammar
+    - conventions
+  add_new_tokens: true
+  load_from_ckpt: false
+  ckpt_path: ???
+  len_tokenizer: ???
+
+
+train_params:
+  train_bs: 8
+  valid_bs: 16
+  grad_accumulation: 1
+  warmup_pct: 0.05
+  num_epochs: 3
+  eval_frequency: 250
+  full_eval_start_epoch: 0
+  use_fp16: true
+  patience: 20
+  use_ema: true
+  ema_prev_epoch_weight: 0.15
+  use_mixout: false
+  mixout_prob: 0.1
+
+
+optimizer:
+  decoder_lr: 3.0e-5
+  encoder_lr: 3.0e-5
+  weight_decay: 5e-4
+  eps: 1e-6
+  beta1: 0.9
+  beta2: 0.999
+  grad_clip: 10
+  use_bnb: true
+  use_llrd: true
+  llrd: 0.85
+
+
+awp:
+  use_awp: true
+  awp_trigger: 10.0
+  awp_trigger_epoch: 1
+  adv_lr: 1e-4
+  adv_eps: 0.001
+
+
+outputs:
+  model_dir: ../models/setfit_prod
+
+
+fold_metadata:
+  n_folds: 4
+  fold_dir: ../datasets/fold_split
+  fold_path: "cv_map_${fold_metadata.n_folds}_folds.parquet"
+
+
+competition_dataset:
+  data_dir: ../datasets/feedback-prize-english-language-learning
+  train_path: train.csv
+  test_path: test.csv
+
+wandb:
+  entity: kaggle-clrp
+  project: rb-feedback-ells-pre-train
+  run_name: rb-setfit-pairwise-cos_sim
+
+

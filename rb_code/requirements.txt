@@ -1,0 +1,9 @@
+accelerate
+pynvml
+sentencepiece
+bitsandbytes
+transformers==4.21.2
+datasets
+hydra-core
+iterative-stratification
+language-tool-python

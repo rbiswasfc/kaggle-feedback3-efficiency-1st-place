@@ -1,0 +1,117 @@
+debug: false
+use_random_seed: false
+seed: 942
+
+fold: ???
+train_folds: ???
+valid_folds: ???
+
+use_wandb: false
+all_data: false
+use_mask_aug: false
+
+tags:
+  - debv3_large
+  - mse
+
+model:
+  backbone_path: microsoft/deberta-v3-large
+  num_layers_reinit: 0
+  num_layers_in_head: 'na'
+  n_freeze: 0
+  max_length: 896
+  target_names:
+    - cohesion
+    - syntax
+    - vocabulary
+    - phraseology
+    - grammar
+    - conventions
+  loss_fn: smooth_l1
+  use_task_heads: 'na'
+  head_type: 'na'
+  use_mixup: false
+  add_new_tokens: true
+  add_target_tokens: false
+  load_from_ckpt: false
+  ckpt_path: ???
+  len_tokenizer: ???
+  verbalizer: list_wise # list_wise, point_wise
+  prompt_type: pv2
+  add_topic: false
+  only_pos_tok: false
+
+train_params:
+  train_bs: 8
+  valid_bs: 8
+  grad_accumulation: 1
+  warmup_pct: 0.05
+  num_epochs: 6
+  eval_frequency: 30000000
+  full_eval_start_epoch: 0
+  use_fp16: false
+  save_trigger: 0.49
+  patience: 20
+  use_ema: true
+  ema_prev_epoch_weight: 0.15
+  ema_decay_rate: 0.99
+  use_mixout: false
+  mixout_prob: 0.1
+
+
+optimizer:
+  decoder_lr: 1e-5
+  encoder_lr: 1.5e-5
+  weight_decay: 1e-3
+  eps: 1e-6
+  beta1: 0.9
+  beta2: 0.999
+  grad_clip: 10
+  use_bnb: false
+  use_llrd: true
+  llrd: 0.95
+
+
+awp:
+  use_awp: true
+  awp_trigger: 0.47
+  awp_trigger_epoch: 1
+  adv_lr: 8e-5
+  adv_eps: 0.001
+
+
+outputs:
+  model_dir: ../models/v3l
+
+
+fold_metadata:
+  n_folds: 8
+  fold_dir: ../datasets/processed
+  fold_path: "train_8folds.csv"
+
+
+competition_dataset:
+  data_dir: ../datasets/feedback-prize-english-language-learning
+  train_path: train.csv
+  test_path: test.csv
+
+
+t5_dataset:
+  use_t5: false
+  train_path: ../datasets/augmented_data/t5_augmented.csv
+  num_augmented: 1500
+
+ensemble_pl:
+  use_pl: true
+  pl_raw_path: ../datasets/processed/pl/pl_data.csv
+  num_pl_samples: 4000
+  num_pl_epochs: 6
+  pl_paths: ???
+  use_filter: false
+
+wandb:
+  entity: kaggle-clrp
+  project: feedback-prize-ell-tk
+  run_name: exp204b-awp-morenums
+
+

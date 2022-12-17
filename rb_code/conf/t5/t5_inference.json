@@ -1,0 +1,9 @@
+{
+    "model_checkpoint": "t5-large",
+    "ckpt_path": "../models/t5_generator/fpe_model_fold_0_best.pth.tar",
+    "max_length": 768,
+    "output_dir": "../datasets/augmented_data/worker_3",
+    "ellipse_path": "../datasets/feedback-prize-english-language-learning/train.csv",
+    "ellipse_summary_path": "../datasets/processed/ellipse_with_summary.csv",
+    "num_augment": 2
+}

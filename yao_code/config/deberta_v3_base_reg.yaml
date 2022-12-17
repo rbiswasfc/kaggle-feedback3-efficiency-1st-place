@@ -1,0 +1,108 @@
+dataset:
+  path: ...
+  fold_file: /home/heyao/kaggle/feedback-ells/input/fb3_folds/train_4folds.csv
+  n_samples_in_train: 0
+  cohesion: Text organization consistently well controlled using a variety of effective linguistic features such as reference and transitional words and phrases to connect ideas across sentences and paragraphs; appropriate overlap of ideas.
+  syntax: Flexible and effective use of a full range of syntactic structures including simple, compound, and complex sentences; There may be rare minor and negligible errors in sentence formation.
+  vocabulary: Wide range of vocabulary flexibly and effectively used to convey precise meanings; skillful use of topic-related terms and less common words; rare negligible inaccuracies in word use.
+  phraseology: Flexible and effective use of a variety of phrases, such as idioms, collocations, and lexical bundles, to convey precise and subtle meanings; rare minor inaccuracies that are negligible.
+  grammar: command of grammar and usage with few or no errors.
+  conventions: Consistent use of appropriate conventions to convey meaning; spelling, capitalization, and punctuation errors nonexistent or negligible.
+  most_similar_sample_path: /home/heyao/kaggle/feedback-ells/input/real_similar_indexes_{train}_fold{fold}_{n_folds}.json
+  train_bm25_path: /home/heyao/kaggle/feedback-ells/input/all_data_bm25.npz.npy
+
+model:
+  path: /media/heyao/42f00068-ba8d-48dd-8719-61eda5244b8d/pretrained-models/deberta-v3-base
+  type: regression
+  head: ""
+  pooling: attention
+  layer_start: 12
+  residual_transformers: false
+  msd: false
+  num_reinit_layers: 1
+  differential_lr:
+    enable: true
+    lr_factor: 2.6
+
+optim:
+  optimizer:
+    lookahead: false
+    lr: 5e-5
+    head_lr: 5e-3
+    betas: [0.9, 0.999]
+    eps: 1e-6
+    weight_decay: 1e-2
+  scheduler:
+    name: linear
+    num_warmup_steps: 0
+    kwargs: {}
+
+train:
+  device: gpu
+  num_folds: 4
+  fold_index: [0]
+  random_seed: 12
+  ensure_data_order: true
+  reinit_weights: true
+  loss: mcrmse
+  zero_dropout: true
+  # whether to use `resolve_encodings_and_normalize`
+  clean: true
+  accumulate_grad: 1
+  max_length: 512
+  batch_size: 32
+  epochs: 3
+  num_workers: 12
+  max_grad_norm: 1000
+  validation_interval: 0.5
+  precision: 16
+  gradient_checkpointing: true
+  freeze_embeddings: false
+  freeze_encoders: 0
+  external_tag_filename: /home/heyao/kaggle/feedback-ells/input/pos.pkl
+  tag_task:
+    enable: false
+
+  report_to:
+    tensorboard:
+      enable: true
+      path: /home/heyao/tf-logs
+    wandb:
+      enable: false
+
+  awp:
+    enable: false
+    from_score: 0.48
+    adv_param: weight
+    adv_lr: 1
+    adv_eps: 1e-2
+    start_epoch: 1
+    adv_step: 1
+  ema:
+    enable: false
+    from_score: 100
+    decay: .999
+  mixout:
+    enable: false
+    p: 0.1
+
+  multi_task:
+    enable: false
+    weight: 0.8
+    tasks: ["readability"]
+    path: "/home/heyao/kaggle/feedback-english-lan-learning/input/tasks/fb3_readability.csv"
+
+  pl:
+    enable: false
+    path: /home/heyao/kaggle/feedback-english-lan-learning/output/pl/pl_dbv3l_fold{fold}.csv
+    stage: 1
+    prev_model_path: /home/heyao/kaggle/feedback-english-lan-learning/bin/weights/deberta-v3-large_fold{fold}-v2.ckpt
+
+  trained_target: null
+
+tokenizer:
+  label_token_ids: [[31066], [16843], [11174], [5741, 8495], [10877], [15521]]
+  label_start_id: 128001
+  label_end_id: 128006
+  label_inject: false
+  label_positions: [4, 6, 8, 10, 11, 15]

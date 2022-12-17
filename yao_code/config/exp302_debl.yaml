@@ -1,0 +1,87 @@
+dataset:
+  path: ...
+  fold_file: ../input/fb3_folds.csv
+  n_samples_in_train: 0
+
+model:
+  path: /media/heyao/42f00068-ba8d-48dd-8719-61eda5244b8d/pretrained-models/deberta-large
+  type: regression
+  pooling: gru_meanmax
+  layer_start: 12
+  msd: false
+  residual_transformers: false
+  num_reinit_layers: 1
+  differential_lr:
+    enable: true
+    lr_factor: 2.6
+
+optim:
+  optimizer:
+    lookahead: false
+    lr: 2e-5
+    head_lr: 1e-3
+    betas: [0.9, 0.999]
+    eps: 1e-6
+    weight_decay: 1e-2
+  scheduler:
+    name: cosine
+    num_warmup_steps: 0
+    kwargs: {}
+
+train:
+  device: gpu
+  num_folds: 5
+  fold_index: [0]
+  random_seed: 26
+  ensure_data_order: true
+  reinit_weights: true
+  loss: smoothl1
+  zero_dropout: true
+  # whether to use `resolve_encodings_and_normalize`
+  clean: true
+  accumulate_grad: 1
+  max_length: 768
+  batch_size: 2
+  epochs: 4
+  num_workers: 12
+  max_grad_norm: 100
+  validation_interval: 0.5
+  precision: 16
+  gradient_checkpointing: true
+  freeze_embeddings: false
+  freeze_encoders: 0
+  trained_target: null
+
+  report_to:
+    tensorboard:
+      enable: true
+      path: /home/heyao/tf-logs
+    wandb:
+      enable: false
+
+  multi_task:
+    enable: false
+  mixout:
+    enable: false
+
+  awp:
+    enable: false
+    from_score: 0.48
+    adv_param: weight
+    adv_lr: 1
+    adv_eps: 1e-2
+    start_epoch: 1
+    adv_step: 1
+  ema:
+    enable: false
+
+  pl:
+    enable: false
+    path: /home/heyao/kaggle/feedback-english-lan-learning/output/pl/pl_dbv3l_fold{fold}.csv
+    stage: 1
+    prev_model_path: /home/heyao/kaggle/feedback-english-lan-learning/bin/weights/deberta-v3-large_fold{fold}-v2.ckpt
+
+tokenizer:
+  label_inject: false
+  label_start_id: 50265
+  label_end_id: 50270

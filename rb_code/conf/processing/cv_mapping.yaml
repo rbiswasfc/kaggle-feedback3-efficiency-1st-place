@@ -1,0 +1,13 @@
+fold_metadata:
+  n_folds: 4
+  seed: 461
+
+competition_dataset:
+  data_dir: ../datasets/feedback-prize-english-language-learning
+  train_path: train.csv
+  test_path: test.csv
+
+outputs:
+  output_dir: ../datasets/fold_split
+  fold_path: "cv_map_${fold_metadata.n_folds}_folds.parquet"
+

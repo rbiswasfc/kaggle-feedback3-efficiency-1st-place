@@ -1,0 +1,23 @@
+{
+    "debug": false,
+    "seed": 453,
+    "fold": 0,
+    "n_folds": 8,
+    "fold_path": "../datasets/fold_split/cv_map_8_folds.parquet",
+    "model_checkpoint": "../models/backbones/t5_large_ellipse",
+    "gradient_checkpointing": false,
+    "max_length": 720,
+    "model_dir": "../models/t5_generator",
+    "add_lf_token": false,
+    "batch_size": 2,
+    "grad_accumulation": 4,
+    "num_epochs": 6,
+    "warmup_pct": 0.05,
+    "fp16": true,
+    "eval_frequency": 400,
+    "patience": 12,
+    "ellipse_path": "../datasets/feedback-prize-english-language-learning/train.csv",
+    "ellipse_summary_path": "../datasets/processed/ellipse_with_summary.csv",
+    "project": "rb-feedback-ells-pre-train",
+    "run_name": "rb-t5-training-with-mlm-ckpt"
+}
